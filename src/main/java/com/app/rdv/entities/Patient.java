@@ -1,13 +1,12 @@
 package com.app.rdv.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Entity
@@ -19,4 +18,6 @@ public class Patient {
     private String prenom;
     private Integer age;
     private Integer tel;
+    @ManyToMany
+    private List<Maladie> maladies;
 }
