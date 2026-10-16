@@ -1,7 +1,9 @@
 package com.app.rdv.controller;
 
 
+import com.app.rdv.dto.PatientDTO;
 import com.app.rdv.entities.Patient;
+import com.app.rdv.mapper.PatientMapper;
 import com.app.rdv.service.IServicePatient;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,15 +19,23 @@ import java.util.Optional;
 public class PatientRestController {
 
     private IServicePatient iServicePatient;
+    private PatientMapper patientMapper;
 
     @GetMapping
-    public List<Patient> findAll() {
-        return iServicePatient.getAllPatients();
+    public List<PatientDTO> findAll() {
+        return patientMapper.toDTOList(iServicePatient.getAllPatients());
     }
 
     @PostMapping("add")
     public Patient add(@RequestBody Patient patient) {
         return iServicePatient.ajouterPatient(patient);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<PatientDTO> findById(@PathVariable int id) {
+        return iServicePatient.getPatientById(id)
+                .map(p -> new ResponseEntity<>(patientMapper.toDTO(p), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("tel")
@@ -36,6 +46,25 @@ public class PatientRestController {
             return new ResponseEntity<>(p.get(), HttpStatus.FOUND);
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    @GetMapping("maladie")
+    public ResponseEntity<?> findByMaladie(@RequestParam String nom) {
+        List<PatientDTO> patients = iServicePatient.getPatientsByMaladieNom(nom);
+        if (patients != null)
+            return new ResponseEntity<>(patients, HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Cette maladie n'existe pas", HttpStatus.NOT_FOUND);
+    }
+    @PostMapping("{patientId}/patient/{maladieId}")
+    public ResponseEntity<?> addMaladieToPatient(@PathVariable int patientId,
+                                                 @PathVariable int maladieId) {
+        PatientDTO dto = iServicePatient.addMaladieToPatient(patientId, maladieId);
+        if (dto != null)
+            return new ResponseEntity<>(dto, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(
+                    "Maladie déjà associée au patient",
+                    HttpStatus.BAD_REQUEST);
     }
 
 }

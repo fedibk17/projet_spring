@@ -1,6 +1,7 @@
 package com.app.rdv.mapper;
 
 import com.app.rdv.dto.PatientDTO;
+import com.app.rdv.entities.Maladie;
 import com.app.rdv.entities.Patient;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ public class PatientMapper {
 
         return patient;
     }
+
     public PatientDTO toDTO(Patient patient){
         PatientDTO dto = new PatientDTO();
 
@@ -26,7 +28,16 @@ public class PatientMapper {
         dto.setPrenom(patient.getPrenom());
         dto.setTel(patient.getTel());
 
-        return dto;}
+        List<String> maladies = patient.getMaladies()
+                .stream()
+                .map(Maladie::getNom)
+                .toList();
+
+        dto.setMaladies(maladies);
+
+        return dto;
+    }
+
     public List<PatientDTO> toDTOList(List<Patient> patients){
         return patients.stream()
             .map(this::toDTO)
