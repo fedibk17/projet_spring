@@ -1,0 +1,1 @@
+ALTER TABLE medecin ADD COLUMN prix_consultation INT NOT NULL DEFAULT 50;
