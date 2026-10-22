@@ -8,6 +8,10 @@ import com.app.rdv.repository.MaladieRepository;
 import com.app.rdv.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PatchMapping;
 
@@ -74,6 +78,14 @@ public class ServicePatient implements IServicePatient {
 
         // 2. Récupérer les patients ayant cette maladie
         return patientMapper.toDTOList(patientRepository.findByMaladiesNom(nomMaladie));
+    }
+
+    @Override
+    public List<PatientDTO> allPatients(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        return patientRepository.findAll(pageable)
+                .map(patientMapper::toDTO)
+                .getContent();
     }
 }
 

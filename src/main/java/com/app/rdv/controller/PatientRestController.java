@@ -6,6 +6,7 @@ import com.app.rdv.entities.Patient;
 import com.app.rdv.mapper.PatientMapper;
 import com.app.rdv.service.IServicePatient;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +21,6 @@ public class PatientRestController {
 
     private IServicePatient iServicePatient;
     private PatientMapper patientMapper;
-
-    @GetMapping
-    public List<PatientDTO> findAll() {
-        return patientMapper.toDTOList(iServicePatient.getAllPatients());
-    }
 
     @PostMapping("add")
     public Patient add(@RequestBody Patient patient) {
@@ -65,6 +61,11 @@ public class PatientRestController {
             return new ResponseEntity<>(
                     "Maladie déjà associée au patient",
                     HttpStatus.BAD_REQUEST);
+    }
+    @GetMapping
+    public List<PatientDTO> findAll(@RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "5") int size) {
+        return iServicePatient.allPatients(page, size);
     }
 
 }
