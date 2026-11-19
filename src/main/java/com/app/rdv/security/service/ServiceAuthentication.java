@@ -3,21 +3,23 @@ package com.app.rdv.security.service;
 import com.app.rdv.security.entities.AppRole;
 import com.app.rdv.security.entities.AppUser;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.app.rdv.security.entities.repositories.AppUserRepository;
 import com.app.rdv.security.entities.repositories.AppRoleRepository;
+
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ServiceAuthentication implements IServiceAuthentication{
 
-    private  AppUserRepository appUserRepository;
-    private  AppRoleRepository appRoleRepository;
-    private  PasswordEncoder passwordEncoder;
+    private final AppUserRepository appUserRepository;
+    private final AppRoleRepository appRoleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public AppUser createAppUser(AppUser appUser) {
-        // unicité du username
+
         if (appUserRepository.findByUsername(appUser.getUsername()) != null) {
             throw new RuntimeException("Username " + appUser.getUsername() + " existe déjà");
         }

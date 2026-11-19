@@ -3,6 +3,7 @@ package com.app.rdv.security.service;
 import com.app.rdv.security.entities.AppRole;
 import com.app.rdv.security.entities.AppUser;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,10 +11,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserDetailsServiceImp implements UserDetailsService {
 
-    private IServiceAuthentication iServiceAuthentication;
+    private final IServiceAuthentication iServiceAuthentication;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

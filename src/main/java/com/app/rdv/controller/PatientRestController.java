@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class PatientRestController {
     private PatientMapper patientMapper;
 
     @PostMapping("add")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public Patient add(@RequestBody Patient patient) {
         return iServicePatient.ajouterPatient(patient);
     }

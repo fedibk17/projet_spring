@@ -4,11 +4,12 @@ import com.app.rdv.security.entities.AppRole;
 import com.app.rdv.security.entities.AppUser;
 import com.app.rdv.security.service.IServiceAuthentication;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/register")
-@AllArgsConstructor
+@PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
 public class AuthenticationController {
     IServiceAuthentication iServiceAuthentication;
 

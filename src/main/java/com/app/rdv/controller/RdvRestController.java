@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class RdvRestController {
     }
 
     @PostMapping("add")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Rdv created",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Rdv.class))),
