@@ -1,0 +1,29 @@
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: bd-rdva1
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-prootpass"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    image: spring-app
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/bd-rdva1?createDatabaseIfNotExist=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: rootpass
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_data:
